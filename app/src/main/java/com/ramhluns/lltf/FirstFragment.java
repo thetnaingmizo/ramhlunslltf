@@ -152,6 +152,7 @@ public class FirstFragment extends Fragment {
         form.put("chhuahhnuDarkar", chhuahhnuDarkar.getText().toString());
         form.put("motorHming", motorHming.getText().toString());
         form.put("motorNumber", motorNumber.getText().toString());
+        form.put("status", "pending");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseFirestore.setLoggingEnabled(true);
