@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.base.Strings;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -45,6 +46,7 @@ public class FirstFragment extends Fragment {
     RelativeLayout hriatpuinaLayout;
     GifImageView gifStatus;
     ImageView ivSignature;
+    ImageView ivReject;
 
     SharedPreferences mPref;
 
@@ -85,6 +87,7 @@ public class FirstFragment extends Fragment {
         tvMotorNumber = view.findViewById(R.id.tvMotorNo);
         gifStatus = view.findViewById(R.id.gifStatus);
         ivSignature = view.findViewById(R.id.ivSignature);
+        ivReject = view.findViewById(R.id.ivReject);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,9 +125,12 @@ public class FirstFragment extends Fragment {
                         tvMotorNumber.setText(formData.motorNumber);
                         gifStatus.setVisibility(formData.status.equalsIgnoreCase("pending") ? View.VISIBLE : View.GONE);
                         ivSignature.setAlpha(formData.status.equalsIgnoreCase("approved") ? 1f : 0f);
+                        ivReject.setVisibility(formData.status.equalsIgnoreCase("reject") ? View.VISIBLE : View.GONE);
                     }
                 } else {
                     Log.w("FORM", "Error getting documents.", e);
+                    formLayout.setVisibility(View.VISIBLE);
+                    hriatpuinaLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -141,7 +147,11 @@ public class FirstFragment extends Fragment {
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage(getString(R.string.submitting));
+        progressDialog.setCancelable(false);
         progressDialog.show();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestore.setLoggingEnabled(true);
 
         Map<String, Object> form = new HashMap<>();
         form.put("hming", hming.getText().toString());
@@ -153,9 +163,8 @@ public class FirstFragment extends Fragment {
         form.put("motorHming", motorHming.getText().toString());
         form.put("motorNumber", motorNumber.getText().toString());
         form.put("status", "pending");
+        form.put("created", Timestamp.now());
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseFirestore.setLoggingEnabled(true);
         db.collection("forms")
                 .add(form)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

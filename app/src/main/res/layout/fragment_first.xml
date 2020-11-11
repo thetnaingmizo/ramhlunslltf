@@ -474,7 +474,17 @@
                         android:layout_below="@+id/tvFimkhur"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="18dp"
+                        android:visibility="gone"
                         android:src="@drawable/nghaklawkang" />
+
+                    <ImageView
+                        android:id="@+id/ivReject"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:layout_below="@+id/tvFimkhur"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="18dp"
+                        android:src="@drawable/reject" />
 
                 </RelativeLayout>
 
